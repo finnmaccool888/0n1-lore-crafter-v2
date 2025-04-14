@@ -21,10 +21,13 @@ model CharacterSubmission {
   status        SubmissionStatus @default(PENDING)
   characterData Json
   aiAnalysis    Json?
+  timelineVerification Json?
+  agingValidation     Json?
   reviewNotes   String?
   reviewerId    String?
   notionPageId  String?
-
+  submitterEmail String?
+  
   @@index([status])
 }
 
