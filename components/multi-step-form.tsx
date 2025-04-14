@@ -14,6 +14,7 @@ import { Voice } from "@/components/steps/voice"
 import { Symbolism } from "@/components/steps/symbolism"
 import { PowersAbilities } from "@/components/steps/powers-abilities"
 import { FinalLore } from "@/components/steps/final-lore"
+import { Psychology } from "@/components/steps/psychology" // Added import for Psychology component
 import type { CharacterData } from "@/lib/types"
 
 export function MultiStepForm() {
