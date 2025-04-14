@@ -1,5 +1,6 @@
 
 export const NOTION_DATABASES = {
+  master: process.env.NOTION_DATABASE_ID || '',
   timeline: process.env.NOTION_TIMELINE_DB_ID || '',
   factions: process.env.NOTION_FACTIONS_DB_ID || '',
   locations: process.env.NOTION_LOCATIONS_DB_ID || '',
