@@ -1,0 +1,31 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Character {
+  id                  String    @id @default(cuid())
+  name                String
+  age                 Int
+  birthYear           Int
+  maturityCategory    String
+  timePeriod         String
+  episodeAlignment   String[]
+  temporalFragments   Int
+  algorithmComplexity Int
+  coreIntegrity      Int
+  bio                String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  
+  // Relations
+  mentors       Character[] @relation("MentorStudent")
+  students      Character[] @relation("MentorStudent")
+  contemporaries Character[] @relation("Contemporary")
+  relatedTo     Character[] @relation("Contemporary")
+}
