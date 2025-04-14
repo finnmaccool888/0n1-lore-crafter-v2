@@ -1,0 +1,301 @@
+const { Client } = require('@notionhq/client');
+const axios = require('axios');
+
+// Initialize Notion client
+const notion = new Client({ auth: process.env.NOTION_API_KEY });
+const databaseId = process.env.NOTION_DATABASE_ID;
+
+// Current Nexus year (100,250 A.I. as of 2025 CE)
+const CURRENT_NEXUS_YEAR = 100250;
+const MATURITY_THRESHOLD = 18;
+
+// Calculate aging rate using the asymptotic curve formula
+function calculateAgingRate(currentAge) {
+  if (currentAge < MATURITY_THRESHOLD) {
+    // Pre-maturity formula
+    return Math.pow((MATURITY_THRESHOLD / (MATURITY_THRESHOLD - currentAge + 1)), 1.5);
+  } else {
+    // Post-maturity formula
+    return Math.pow((MATURITY_THRESHOLD / currentAge), 2);
+  }
+}
+
+// Determine maturity category based on age
+function getMaturityCategory(age) {
+  if (age < MATURITY_THRESHOLD) return "Newstream";
+  if (age < 100) return "Initialized";
+  if (age < 500) return "Ancient";
+  return "Immortal";
+}
+
+// Get time period based on birth year
+function getTimePeriod(birthYear) {
+  if (birthYear < 10000) return "Genesis Era";
+  if (birthYear < 50000) return "Expansion Period";
+  if (birthYear < 70000) return "Classical Age";
+  if (birthYear < 95000) return "Reformation";
+  return "Current Era";
+}
+
+// Get episode alignment
+function getEpisodeAlignment(birthYear) {
+  if (birthYear >= 50000 && birthYear <= 70000) return ["Episodes 1-3"];
+  if (birthYear >= 95000) return ["Episodes 4-6"];
+  return [];
+}
+
+// Calculate time to age one more cycle
+function timeToAgePlusCycle(age) {
+  return 1 / calculateAgingRate(age);
+}
+
+// Create a new character in the Notion database
+async function createCharacter(characterData) {
+  try {
+    // Calculate derived values
+    const age = characterData.age || Math.floor(Math.random() * 1000);
+    const birthYear = CURRENT_NEXUS_YEAR - age;
+    const agingRate = calculateAgingRate(age);
+    const maturityCategory = getMaturityCategory(age);
+    const timePeriod = getTimePeriod(birthYear);
+    const episodeAlignment = getEpisodeAlignment(birthYear);
+    
+    // Default technical attributes if not provided
+    const coreIntegrity = characterData.coreIntegrity || Math.floor(Math.random() * 100) + 1;
+    const algorithmComplexity = characterData.algorithmComplexity || Math.floor(Math.random() * 1000) + 1;
+    const temporalFragments = characterData.temporalFragments || Math.floor(age * agingRate);
+    
+    // Calculate effective age
+    const acfFactor = algorithmComplexity / (algorithmComplexity + temporalFragments);
+    const effectiveTDFs = temporalFragments * (1 - acfFactor);
+    const effectiveAge = effectiveTDFs * (100 / coreIntegrity);
+    
+    // Create the character in Notion
+    const response = await notion.pages.create({
+      parent: { database_id: databaseId },
+      properties: {
+        "Name": {
+          title: [{ text: { content: characterData.name } }]
+        },
+        "Character ID": {
+          number: characterData.id || Math.floor(Math.random() * 1000000)
+        },
+        "Creation Date": {
+          date: { start: new Date().toISOString() }
+        },
+        "Current Age in Cycles": {
+          number: age
+        },
+        "Maturity Category": {
+          select: { name: maturityCategory }
+        },
+        "Birth Year (A.I.)": {
+          number: birthYear
+        },
+        "Current Effective Age": {
+          number: effectiveAge
+        },
+        "Aging Rate": {
+          number: agingRate
+        },
+        "Time Period": {
+          multi_select: [{ name: timePeriod }]
+        },
+        "Episode Alignment": {
+          multi_select: episodeAlignment.map(ep => ({ name: ep }))
+        },
+        "Temporal Data Fragments": {
+          number: temporalFragments
+        },
+        "Algorithm Complexity Factor": {
+          number: algorithmComplexity
+        },
+        "Core Integrity Index": {
+          number: coreIntegrity
+        },
+        "Short Bio": {
+          rich_text: [{ text: { content: characterData.bio || "" } }]
+        }
+      }
+    });
+    
+    return response;
+  } catch (error) {
+    console.error("Error creating character:", error);
+    throw error;
+  }
+}
+
+// Find contemporary characters (characters in the same time period)
+async function findContemporaryCharacters(characterBirthYear, ageRange = 500) {
+  try {
+    const minYear = characterBirthYear - ageRange;
+    const maxYear = characterBirthYear + ageRange;
+    
+    const response = await notion.databases.query({
+      database_id: databaseId,
+      filter: {
+        and: [
+          {
+            property: "Birth Year (A.I.)",
+            number: {
+              greater_than_or_equal_to: minYear
+            }
+          },
+          {
+            property: "Birth Year (A.I.)",
+            number: {
+              less_than_or_equal_to: maxYear
+            }
+          }
+        ]
+      },
+      sorts: [
+        {
+          property: "Birth Year (A.I.)",
+          direction: "ascending"
+        }
+      ]
+    });
+    
+    return response.results;
+  } catch (error) {
+    console.error("Error finding contemporary characters:", error);
+    throw error;
+  }
+}
+
+// Update character relations (mentors, students, contemporaries)
+async function updateCharacterRelations(characterId, relationData) {
+  try {
+    const updateData = {
+      properties: {}
+    };
+    
+    if (relationData.contemporaries && relationData.contemporaries.length > 0) {
+      updateData.properties["Contemporary Characters"] = {
+        relation: relationData.contemporaries.map(id => ({ id }))
+      };
+    }
+    
+    if (relationData.mentors && relationData.mentors.length > 0) {
+      updateData.properties["Mentors"] = {
+        relation: relationData.mentors.map(id => ({ id }))
+      };
+    }
+    
+    if (relationData.students && relationData.students.length > 0) {
+      updateData.properties["Students"] = {
+        relation: relationData.students.map(id => ({ id }))
+      };
+    }
+    
+    if (relationData.historicalReferences && relationData.historicalReferences.length > 0) {
+      updateData.properties["Historical References"] = {
+        relation: relationData.historicalReferences.map(id => ({ id }))
+      };
+    }
+    
+    const response = await notion.pages.update({
+      page_id: characterId,
+      ...updateData
+    });
+    
+    return response;
+  } catch (error) {
+    console.error("Error updating character relations:", error);
+    throw error;
+  }
+}
+
+// Generate a complete character with appropriate timeline placement
+async function generateCharacter(name, desiredEra = null, age = null) {
+  // Set defaults based on desired era if not explicitly provided
+  if (desiredEra && !age) {
+    switch(desiredEra) {
+      case "Genesis Era":
+        age = CURRENT_NEXUS_YEAR - Math.floor(Math.random() * 10000);
+        break;
+      case "Expansion Period":
+        age = CURRENT_NEXUS_YEAR - (10000 + Math.floor(Math.random() * 40000));
+        break;
+      case "Classical Age":
+        age = CURRENT_NEXUS_YEAR - (50000 + Math.floor(Math.random() * 20000));
+        break;
+      case "Reformation":
+        age = CURRENT_NEXUS_YEAR - (70000 + Math.floor(Math.random() * 25000));
+        break;
+      case "Current Era":
+        age = CURRENT_NEXUS_YEAR - (95000 + Math.floor(Math.random() * 5250));
+        break;
+      default:
+        age = Math.floor(Math.random() * 1000);
+    }
+  } else if (!age) {
+    // Default to current era if no preferences specified
+    age = Math.floor(Math.random() * 500);
+  }
+  
+  // Generate appropriate technical attributes based on age
+  const coreIntegrity = Math.min(100, Math.max(30, Math.floor(40 + (age/1000) * 60)));
+  const algorithmComplexity = Math.min(1000, Math.max(50, Math.floor(100 + (age/100) * 900)));
+  
+  // Calculate TDFs based on age and a randomization factor
+  const agingRate = calculateAgingRate(age);
+  const baseFragments = age * agingRate;
+  const randomFactor = 0.8 + (Math.random() * 0.4); // 80-120% of expected
+  const temporalFragments = Math.floor(baseFragments * randomFactor);
+  
+  // Generate appropriate entropy mitigation techniques based on age
+  const mitigationTechniques = [];
+  if (age > 90) mitigationTechniques.push("Algorithm Optimization");
+  if (age > 180) mitigationTechniques.push("Entropy Dispersion");
+  if (age > 500) mitigationTechniques.push("Core Recompilation");
+  if (age > 900) mitigationTechniques.push("Null State Meditation");
+  if (age > 1800) mitigationTechniques.push("Quantum Entanglement");
+  if (age > 9000) mitigationTechniques.push("Dimensional Shifting");
+  
+  // Create character data object
+  const characterData = {
+    name,
+    age,
+    coreIntegrity,
+    algorithmComplexity,
+    temporalFragments,
+    bio: `A digital being in the Nexus, currently ${age} cycles old.`,
+    mitigationTechniques
+  };
+  
+  // Create the character in Notion
+  const newCharacter = await createCharacter(characterData);
+  
+  // Find contemporary characters
+  const birthYear = CURRENT_NEXUS_YEAR - age;
+  const contemporaries = await findContemporaryCharacters(birthYear);
+  
+  // Update relations (simplified - you'd want more logic here for mentor/student relationships)
+  if (contemporaries.length > 0) {
+    const contemporaryIds = contemporaries.slice(0, 5).map(char => char.id);
+    await updateCharacterRelations(newCharacter.id, {
+      contemporaries: contemporaryIds
+    });
+  }
+  
+  return {
+    character: newCharacter,
+    contemporaries: contemporaries.slice(0, 5)
+  };
+}
+
+// Export the functions for use in your API or other parts of the application
+module.exports = {
+  createCharacter,
+  findContemporaryCharacters,
+  updateCharacterRelations,
+  generateCharacter,
+  calculateAgingRate,
+  getMaturityCategory,
+  getTimePeriod,
+  getEpisodeAlignment,
+  timeToAgePlusCycle
+};
