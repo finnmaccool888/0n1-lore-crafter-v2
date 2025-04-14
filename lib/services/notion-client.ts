@@ -7,7 +7,10 @@ const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour
 export class NotionService {
   private client: Client;
   
-  constructor(apiKey: string) {
+  constructor(apiKey: string = process.env.NOTION_API_KEY || '') {
+    if (!apiKey) {
+      throw new Error('Notion API key is required');
+    }
     this.client = new Client({ auth: apiKey });
   }
 
