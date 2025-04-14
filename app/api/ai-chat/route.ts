@@ -1,73 +1,77 @@
-import { NextResponse } from "next/server"
-import OpenAI from "openai"
-import type { CharacterData } from "@/lib/types"
-import { generateEnhancedSystemPrompt } from "@/lib/ai/prompt-engineering"
+import { NextResponse } from "next/server";
+import OpenAI from "openai";
+import type { CharacterData } from "@/lib/types";
+import { generateEnhancedSystemPrompt } from "@/lib/ai/prompt-engineering";
+import { worldStore } from "@/lib/stores/world-store";
 
 // Initialize OpenAI client with error handling
-let openai: OpenAI | null = null
+let openai: OpenAI | null = null;
 try {
   openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY || "",
-  })
+  });
 } catch (error) {
-  console.error("Failed to initialize OpenAI client:", error)
+  console.error("Failed to initialize OpenAI client:", error);
 }
 
 interface Message {
-  role: "user" | "assistant"
-  content: string
+  role: "user" | "assistant";
+  content: string;
 }
 
 export async function POST(request: Request) {
   try {
+    // Retrieve world data
+    const worldData = worldStore.getWorldData();
+
+    // Parse request body with error handling
+    let characterData: CharacterData;
+    let currentStep: string;
+    let subStep: string | null = null;
+    let messages: Message[] = [];
+
+    try {
+      const body = await request.json();
+      characterData = body.characterData;
+      currentStep = body.currentStep;
+      subStep = body.subStep || null;
+      messages = body.messages || [];
+
+      if (!characterData || !currentStep || !messages.length) {
+        throw new Error("Missing required fields");
+      }
+    } catch (error) {
+      console.error("Error parsing request:", error);
+      return NextResponse.json(
+        {
+          error: "Invalid request data",
+          response: "I couldn't understand your request. Please try again.",
+        },
+        { status: 200 }
+      );
+    }
+
     // Check if OpenAI client is initialized
     if (!openai) {
-      console.error("OpenAI client not initialized")
+      console.error("OpenAI client not initialized");
       return NextResponse.json(
         {
           error: "OpenAI client not initialized",
           response:
             "I'm having trouble connecting right now. Please try again later or use the suggestions above for inspiration.",
         },
-        { status: 200 },
-      )
+        { status: 200 }
+      );
     }
 
-    // Parse request body with error handling
-    let characterData: CharacterData
-    let currentStep: string
-    let subStep: string | null = null
-    let messages: Message[] = []
-
-    try {
-      const body = await request.json()
-      characterData = body.characterData
-      currentStep = body.currentStep
-      subStep = body.subStep || null
-      messages = body.messages || []
-
-      if (!characterData || !currentStep || !messages.length) {
-        throw new Error("Missing required fields")
-      }
-    } catch (error) {
-      console.error("Error parsing request:", error)
-      return NextResponse.json(
-        {
-          error: "Invalid request data",
-          response: "I couldn't understand your request. Please try again.",
-        },
-        { status: 200 },
-      )
-    }
-
-    // Generate enhanced system prompt
+    // Generate enhanced system prompt - include worldData
     const systemPrompt = generateEnhancedSystemPrompt({
       characterData,
       currentStep,
       subStep,
-      // For chat, we want more comprehensive lore
+      worldData, // Added worldData
       maxTokens: 3000,
-    })
+    });
 
     // Format messages for OpenAI API
     const apiMessages = [
@@ -76,7 +80,7 @@ export async function POST(request: Request) {
         role: msg.role === "user" ? ("user" as const) : ("assistant" as const),
         content: msg.content,
       })),
-    ]
+    ];
 
     // Call OpenAI API with timeout
     try {
@@ -87,33 +91,35 @@ export async function POST(request: Request) {
           temperature: 0.7,
           max_tokens: 500,
         }),
-        new Promise((_, reject) => setTimeout(() => reject(new Error("OpenAI API timeout")), 10000)),
-      ])) as OpenAI.Chat.Completions.ChatCompletion
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("OpenAI API timeout")), 10000)
+        ),
+      ])) as OpenAI.Chat.Completions.ChatCompletion;
 
       const aiResponse =
         response.choices[0].message.content ||
-        "I'm not sure how to respond to that. Could you try asking in a different way?"
+        "I'm not sure how to respond to that. Could you try asking in a different way?";
 
-      return NextResponse.json({ response: aiResponse })
+      return NextResponse.json({ response: aiResponse, success:true, worldData }); //Added success and worldData to response
     } catch (error) {
-      console.error("Error calling OpenAI API:", error)
+      console.error("Error calling OpenAI API:", error);
       return NextResponse.json(
         {
           error: "Failed to generate response",
           response:
             "I'm having trouble connecting right now. Please try again or use the suggestions above for inspiration.",
         },
-        { status: 200 },
-      )
+        { status: 200 }
+      );
     }
   } catch (error) {
-    console.error("Unhandled error in AI chat route:", error)
+    console.error("Unhandled error in AI chat route:", error);
     return NextResponse.json(
       {
-        error: "Internal server error",
+        error: "Failed to process request", // Using edited code's better error message.
         response: "Something went wrong. Please try again later.",
       },
-      { status: 200 },
-    )
+      { status: 500 } //Using edited code's better status code.
+    );
   }
 }
