@@ -23,6 +23,10 @@ export function MultiStepForm() {
     pfpId: "",
     traits: [],
     archetype: "",
+    psychology: {
+      personalityType: "",
+      coreValues: [],
+    },
     background: "",
     hopesFears: {
       hopes: "",
