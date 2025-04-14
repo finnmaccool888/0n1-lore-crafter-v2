@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model CharacterSubmission {
+  id                   String           @id @default(cuid())
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  status               SubmissionStatus @default(PENDING)
+  characterData        Json
+  aiAnalysis           Json?
+  timelineVerification Json?
+  agingValidation      Json?
+  reviewNotes          String?
+  reviewerId           String?
+  notionPageId         String?
+  submitterEmail       String?
+
+  @@index([status])
+}
+
+model Admin {
+  id       String @id @default(cuid())
+  email    String @unique
+  password String
+}
+
+model Character {
+  id                  String   @id @default(cuid())
+  name                String
+  age                 Int
+  birthYear           Int
+  maturityCategory    String
+  timePeriod          String
+  episodeAlignment    String[]
+  temporalFragments   Int
+  algorithmComplexity Int
+  coreIntegrity       Int
+  bio                 String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Relations
+  mentors        Character[] @relation("MentorStudent")
+  students       Character[] @relation("MentorStudent")
+  contemporaries Character[] @relation("Contemporary")
+  relatedTo      Character[] @relation("Contemporary")
+}

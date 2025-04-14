@@ -6,7 +6,7 @@ channel = "stable-24_05"
 
 [deployment]
 run = ["sh", "-c", "npm start -- -p 3000"]
-build = ["sh", "-c", "npm ci && npm run build"]
+build = ["sh", "-c", "npm ci && npx prisma generate && npm run build"]
 
 [workflows]
 runButton = "Dev"
