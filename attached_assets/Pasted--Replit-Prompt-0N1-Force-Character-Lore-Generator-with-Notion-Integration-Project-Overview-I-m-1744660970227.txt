@@ -1,0 +1,84 @@
+# Replit Prompt: 0N1 Force Character Lore Generator with Notion Integration
+
+## Project Overview
+I'm building a comprehensive character lore generator for the 0N1 Force universe that pulls data from a Notion database containing our world-building elements. This system will allow community-created lore to be continuously integrated and accessible to the generator, ensuring consistency across all media formats (webtoons, games, stories, etc.).
+
+## Primary Goals
+1. Create a Notion database connection that syncs world-building content
+2. Implement the character generation system from my existing prompt flow
+3. Build a story engine foundation that supports cross-media narrative continuity
+4. Ensure the system can evolve as new lore elements are added by the community
+
+## Tech Stack Requirements
+- Node.js backend
+- Notion API integration
+- Character generation system
+- JSON storage/export capability
+- Future extensibility for game engine integration
+
+## Specific Implementation Needs
+
+### 1. Notion Database Integration
+Please analyze my project and implement a system that:
+- Connects to the Notion API using an integration token
+- Pulls world-building data from specified Notion databases
+- Caches content locally to reduce API calls
+- Implements a regular sync schedule or manual trigger option
+- Organizes data into accessible structures for the character generator
+
+### 2. Character Generation System
+Implement the character generation flow from my document with these enhancements:
+- Store character archetypes with their associated traits and powers
+- Connect character generation to world-building elements from Notion
+- Implement the psychology, origins, relationships sections as described in the paste.txt file
+- Create a JSON export feature for character data
+- Add story engine preparation as specified
+
+### 3. Enhanced World-Building Integration
+Extend the world-building categories to include:
+- **Timeline & Era Tracking**: Historical events and their impact on character generation
+- **Faction Dynamics**: Political forces, alliances, and conflicts 
+- **Location-Specific Traits**: How birthplace affects character development
+- **Cultural Systems**: Traditions, ceremonies, beliefs that shape characters
+- **Power Sources & Manifestations**: Detailed mechanics of the One Source
+- **Technology & Artifacts**: Notable items and their narrative significance
+- **Narrative Themes & Motifs**: Core storytelling elements that repeat across media
+- **Story Hooks & Plot Seeds**: Common narrative triggers for character stories
+- **Media-Specific Adaptations**: How character elements translate across different media
+- **Relationship Networks**: How characters interconnect in the larger universe
+
+### 4. Story Engine Foundation
+Build the groundwork for a story engine that can:
+- Track narrative continuity across characters and media
+- Generate consistent story arcs based on character archetypes
+- Map character growth trajectories based on personality and background
+- Create conflict scenarios based on world events and character motivations
+- Track relationships and interactions between characters over time
+
+## Code Structure Recommendations
+Please analyze my existing code first, then suggest a modular architecture that allows for:
+1. Separation between data sources (Notion API connection)
+2. Character generation logic
+3. Story engine components
+4. Export/persistence mechanisms
+5. Future API endpoints for cross-media integration
+
+## Specific Technical Requirements
+- Use the Notion API JavaScript SDK
+- Implement proper error handling for API failures
+- Create a caching system to minimize Notion API calls
+- Ensure all character data can be exported as JSON
+- Document the code extensively for future community contributions
+- Add environment variable support for API keys and configuration
+
+## Implementation Steps
+1. First analyze my existing project structure and files
+2. Outline your proposed implementation approach
+3. Create the Notion API connection
+4. Implement the character model enhancements
+5. Build the generation functions
+6. Add the story engine preparation features
+7. Create export capabilities
+8. Test with sample data
+
+Thank you for your help on this ambitious project!
