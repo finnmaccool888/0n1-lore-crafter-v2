@@ -3,9 +3,9 @@ import "@/app/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Inter } from "next/font/google"
 import type { Metadata } from "next"
-import { AuthProvider } from './auth-context'; // Add AuthProvider import
+import { AuthProvider } from '@/lib/auth/auth-context'; // Add AuthProvider import
 import Link from 'next/link'; // Import Link component
-import AuthButton from './AuthButton'; // Import AuthButton component
+import { AuthButton } from '@/components/auth-button'; // Import AuthButton component
 
 
 const inter = Inter({ subsets: ["latin"] })
