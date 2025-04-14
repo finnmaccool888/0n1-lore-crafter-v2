@@ -35,3 +35,5 @@ export class NotionService {
     return worldData;
   }
 }
+
+export const getNotionClient = (apiKey: string) => new NotionService(apiKey);
