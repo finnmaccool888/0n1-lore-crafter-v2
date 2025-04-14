@@ -3,6 +3,24 @@ import { PrismaClient } from '@prisma/client';
 import { calculateAgingRate, getMaturityCategory, getTimePeriod, getEpisodeAlignment } from '../utils/character-utils';
 
 const prisma = new PrismaClient();
+
+export async function getSubmissionsByUser(userId: string) {
+  return prisma.characterSubmission.findMany({
+    where: {
+      submitterEmail: userId
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+}
+
+export async function updateCharacterSubmission(id: string, data: any) {
+  return prisma.characterSubmission.update({
+    where: { id },
+    data
+  });
+}
 const CURRENT_NEXUS_YEAR = 100250;
 
 export async function createCharacter(characterData: any) {
