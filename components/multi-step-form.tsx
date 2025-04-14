@@ -83,6 +83,13 @@ export function MultiStepForm() {
       updateCharacterData={updateCharacterData}
       nextStep={nextStep}
     />,
+    <Psychology 
+      key="psychology"
+      characterData={characterData}
+      updateCharacterData={updateCharacterData}
+      nextStep={nextStep}
+      prevStep={prevStep}
+    />,
     <ArchetypeSelection
       key="archetype-selection"
       characterData={characterData}

@@ -6,15 +6,30 @@ export interface Trait {
 export interface CharacterData {
   pfpId: string
   traits: Trait[]
-  imageUrl?: string // Add imageUrl to store the NFT image
+  imageUrl?: string
   archetype: string
   background: string
+  psychology: {
+    personalityType: string
+    coreValues: string[]
+    fears: string[]
+    desires: string[]
+    innerConflict: string
+    defenseMechanisms: string[]
+  }
+  origins: {
+    birthplace: string
+    family: string
+    culturalBackground: string
+    formativeEvents: string[]
+    childhood: string
+  }
   hopesFears: {
     hopes: string
     fears: string
   }
   personalityProfile: {
-    description: string // Changed to a single description field
+    description: string
   }
   motivations: {
     drives: string
@@ -22,9 +37,11 @@ export interface CharacterData {
     values: string
   }
   relationships: {
-    friends: string
-    rivals: string
-    family: string
+    allies: string[]
+    rivals: string[]
+    mentors: string[]
+    familyTies: string[]
+    romanticConnections: string[]
   }
   worldPosition: {
     societalRole: string
