@@ -1,0 +1,44 @@
+Create a master database called "0N1 MASTER DATABASE" that will serve as the central hub for our entire 0N1 universe lore system. 
+
+This master database should have the following properties:
+
+1. Component Name (Title): Name of the database or system component
+2. Component Type (Select): Character System, World Building, Timeline, Approval Workflow, Technical System, Narrative Elements
+3. Description (Text): Brief explanation of what this component does
+4. Database Link (URL): Direct link to the associated database
+5. Status (Select): Active, In Development, Archived, Pending Review
+6. Last Updated (Date): When this component was last modified
+7. Responsible Team (Multi-select): Engineering, Lore, Community, Design, Executive
+8. Priority Level (Select): Critical, High, Medium, Low
+9. Related Components (Relation): Self-relation to connect interdependent systems
+10. Technical Documentation (URL): Link to technical documentation if applicable
+11. Notes (Text): Additional information about this component
+
+Then, create the following linked views:
+
+1. "Character System Hub" - Filtered to show only components related to character creation, aging system, and character approval flow
+2. "World Building Hub" - Filtered to show Enclave, Locations, Factions and other world elements
+3. "Timeline System" - Filtered to show all components related to the AI/PI dating system and chronology
+4. "Technical Implementation" - Filtered to show the technical components and API integrations
+5. "Approval Workflows" - Filtered to show only the approval systems for character canon verification
+
+For the initial database, please create entries for these core components:
+
+1. Character Asymptotic Aging System
+2. AI/PI Timeline Correlation System
+3. Character Submission Form
+4. Character Approval Workflow
+5. Notion Integration API
+6. Character Lore Generator
+7. Canon Verification System
+8. Enclave Database
+9. Timeline Database
+10. Location Database
+11. One Source Database
+12. Archetypes Database
+13. Factions Database
+14. Contributors Database
+
+For each entry, please generate a brief description explaining its role in the overall system and how it connects to other components.
+
+Also create a linked database for "System Updates" to track changes to any component with properties for Update Description, Date, Responsible Person, and Affected Components.
