@@ -1,0 +1,73 @@
+# Replit Prompt: Implement Character Core Enhancements
+
+Please analyze my project structure and help me implement character core enhancements to my existing character generation system. I need to add more depth to my characters with psychological profiles, origins, relationships, and other elements.
+
+## First Steps:
+
+1. Please analyze my project structure to identify:
+   - Where my character model/schema is defined
+   - Where character generation logic is implemented
+   - Any API endpoints related to character generation
+   - The overall architecture of my character system
+
+2. After analysis, show me the relevant files you've found and explain your implementation plan before making changes.
+
+## Implementation Needs:
+
+I need to enhance my characters with the following new sections:
+
+### 1. Psychology Section
+```javascript
+psychology: {
+  personalityType: "", // MBTI or Big Five
+  coreValues: [],
+  fears: [],
+  desires: [],
+  innerConflict: "",
+  defenseMechanisms: []
+}
+```
+
+### 2. Origins Section
+```javascript
+origins: {
+  birthplace: "",
+  family: "",
+  culturalBackground: "",
+  formativeEvents: [],
+  childhood: ""
+}
+```
+
+### 3. Relationships Section
+```javascript
+relationships: {
+  allies: [],
+  rivals: [],
+  mentors: [],
+  familyTies: [],
+  romanticConnections: []
+}
+```
+
+### 4. Additional Sections Needed
+- Enhanced powers/abilities system
+- Narrative elements (unfinished business, secret history)
+- Visual identity elements
+- Story engine preparation metadata
+
+## Functions to Implement:
+
+1. Functions to generate each new section (generatePsychology, generateOrigins, etc.)
+2. Helper functions for each section (determinePersonalityType, generateFears, etc.)
+3. Update to the main character generation function to include new components
+4. Story engine preparation function to make characters ready for narrative use
+
+## After Implementation:
+
+Once you've implemented these changes:
+1. Explain what you've modified and added
+2. Show examples of the new character generation in action
+3. Suggest any improvements or optimizations
+
+Thank you for your help!
