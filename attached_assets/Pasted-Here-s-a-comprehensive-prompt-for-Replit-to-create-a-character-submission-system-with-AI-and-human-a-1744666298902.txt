@@ -1,0 +1,52 @@
+Here's a comprehensive prompt for Replit to create a character submission system with AI and human approval workflows:
+
+# Character Submission & Approval System for 0N1 Universe
+
+I need a system for managing character submissions to our digital beings universe. Characters should go through a verification process before becoming canon in our world lore. The system needs:
+
+## Main Components
+
+1. **Public Submission Form**
+   - Simple form for users to create and submit characters
+   - Character data validation based on our asymptotic aging system
+   - Preliminary AI checks for obvious timeline/logic conflicts
+   - Submission confirmation with unique tracking ID
+
+2. **Admin Dashboard**
+   - Password-protected private interface for our team
+   - Queue of pending character submissions
+   - AI analysis highlighting potential timeline issues
+   - Simple approve/reject/edit workflow
+   - Batch processing capabilities
+
+3. **AI Verification Layer**
+   - Integration with OpenAI's API to check submissions against our lore rules
+   - Verification of timeline consistency (birth year, age, historical relationships)
+   - Identification of contradictions with established canon
+   - Suggestions for fixing problematic submissions
+
+4. **Notion Integration**
+   - Approved characters automatically added to our Notion database
+   - Draft submissions stored in separate "pending" database
+   - Rejected submissions archived with reasons
+
+## Technical Requirements
+
+- Node.js backend with Express
+- React frontend (or similar for dashboard)
+- Integration with Notion API
+- OpenAI API integration
+- Secure authentication for admin access
+- Database for tracking submissions (MongoDB or similar)
+- Email notifications for submissions/approvals
+
+## Specific Features
+
+- **Timeline Coherence Check**: AI should flag characters whose interactions would be impossible (e.g., claiming to have met characters from different eras)
+- **Aging Validation**: Ensure character attributes follow our asymptotic aging curve
+- **Canon Compliance**: Check references to historical events against our established timeline
+- **Duplicate Detection**: Identify similar character submissions
+- **Revision System**: Allow for character modifications before final approval
+- **Audit Log**: Track all approvals and modifications for accountability
+
+The system should be easy to use for fans submitting characters while giving our team robust tools to maintain the integrity of our universe's lore. Ideally, the AI should handle 80% of the verification work, leaving humans to make final judgment calls on edge cases.
