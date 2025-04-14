@@ -21,19 +21,33 @@ export function SubmissionDashboard() {
   }, [])
 
   async function fetchSubmissions() {
-    const res = await fetch('/api/submissions')
+    const res = await fetch('/api/submissions', {
+      headers: {
+        'x-admin-token': process.env.NEXT_PUBLIC_ADMIN_SECRET || ''
+      }
+    })
     const data = await res.json()
     setSubmissions(data)
     setLoading(false)
   }
 
   async function handleApprove(id: string) {
-    await fetch(`/api/submissions/${id}/approve`, { method: 'POST' })
+    await fetch(`/api/submissions/${id}/approve`, {
+      method: 'POST',
+      headers: {
+        'x-admin-token': process.env.NEXT_PUBLIC_ADMIN_SECRET || ''
+      }
+    })
     fetchSubmissions()
   }
 
   async function handleReject(id: string) {
-    await fetch(`/api/submissions/${id}/reject`, { method: 'POST' })
+    await fetch(`/api/submissions/${id}/reject`, {
+      method: 'POST',
+      headers: {
+        'x-admin-token': process.env.NEXT_PUBLIC_ADMIN_SECRET || ''
+      }
+    })
     fetchSubmissions()
   }
 
